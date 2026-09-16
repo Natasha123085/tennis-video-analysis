@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TENNIS AI - Video Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="background-effects">
+        <div class="particles"></div>
+        <div class="court-lines"></div>
+        <div class="glow-effect"></div>
+    </div>
+
+    <div class="container">
+
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-tennis-ball"></i>
+                <span>TENNIS<span class="logo-highlight">AI</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+            </nav>
+        </header>
+
+
+        <main class="main-content">
+            <div class="hero">
+                <h1 class="title">
+                    <span class="title-line">DEEP TENNIS</span>
+                    <span class="title-line highlight">VIDEO ANALYSIS</span>
+                </h1>
+                <p class="subtitle">
+                    Upload your match video for AI-powered insights on ball speed,
+                    rally patterns, player movement, and strategic recommendations.
+                </p>
+
+            </div>
+
+
+            <div class="upload-section">
+                <div class="upload-warning">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Upload Requirements</h3>
+                    <p>Please upload a clear tennis match video only.</p>
+                    <ul>
+                        <li>Allowed formats: MP4, AVI, MOV, MKV</li>
+                        <li>Maximum file size: 200 MB</li>
+                        <li>The court and both players should be clearly visible</li>
+                        <li>A stable camera angle is recommended</li>
+                    </ul>
+                </div>
+
+                {% if error %}
+                <div class="error-message">
+                    {{ error }}
+                </div>
+                {% endif %}
+                <form id="uploadForm" action="/analyze" method="POST" enctype="multipart/form-data">
+                    <div class="upload-container">
+                        <input type="file" id="videoInput" name="video" accept=".mp4,.avi,.mov,.mkv" style="display: none;">
+
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">
+                                <h3>Upload Match Video</h3>
+                                <p>Drag & drop or click to browse</p>
+                                <p class="upload-hint">Supports MP4, MOV, AVI, MKV • Max 200MB</p>
+                            </div>
+                            <div class="upload-button">
+                                <label for="videoInput" class="browse-btn">
+                                    <i class="fas fa-folder-open"></i> Browse Files
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="selected-file" id="selectedFile">
+                            <div class="file-info">
+                                <i class="fas fa-file-video"></i>
+                                <div>
+                                    <h4 id="fileName">No file selected</h4>
+                                    <p id="fileSize">-</p>
+                                </div>
+                            </div>
+                            <button type="submit" class="analyze-btn">
+                                <i class="fas fa-play-circle"></i> Analyze Video
+                            </button>
+                        </div>
+                        <div class="upload-progress" id="uploadProgress" style="display:none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p id="progressText">Uploading... 0%</p>
+                        </div>
+
+                    </div>
+                </form>
+
+                <div class="preview-section">
+                    <video id="videoPreview" controls></video>
+                    <div class="preview-placeholder">
+                        <i class="fas fa-play-circle"></i>
+                        <p>Video preview will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+    <p>Tennis AI Video Analysis Platform</p>
+</footer>
+    </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+</body>
+</html>

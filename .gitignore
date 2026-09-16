@@ -1,0 +1,75 @@
+# ==============================
+# Python
+# ==============================
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ==============================
+# IDE
+# ==============================
+.idea/
+.vscode/
+analysis/.vscode/
+
+# ==============================
+# Virtual environments
+# ==============================
+venv/
+.venv/
+env/
+
+# ==============================
+# Environment variables / secrets
+# ==============================
+.env
+*.env
+
+# ==============================
+# Tennis input/output videos
+# ==============================
+analysis/input_videos/
+analysis/output_videos/
+
+# ==============================
+# YOLO generated results
+# ==============================
+analysis/runs/
+
+# ==============================
+# Tracker cache / stubs
+# ==============================
+analysis/tracker_stubs/
+
+# ==============================
+# Training datasets and outputs
+# ==============================
+analysis/training/data/
+analysis/training/runs/
+analysis/training/tennis-ball-detection-6/
+analysis/training/tennis_court_det_dataset.zip
+
+# Duplicate / large training weight
+analysis/training/keypoints_model.pth
+
+# ==============================
+# Model weights not stored in Git
+# ==============================
+analysis/models/keypoints_model.pth
+analysis/models/yolo5_last.pt
+analysis/models/yolov8n.pt
+analysis/models/yolov8x.pt
+
+# Keep:
+# analysis/models/yolo5_best.pt
+
+# ==============================
+# Website user uploads
+# ==============================
+website/static/uploads/
+
+# ==============================
+# OS generated files
+# ==============================
+.DS_Store
+Thumbs.db

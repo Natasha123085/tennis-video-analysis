@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TENNIS AI - Analysis Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-tennis-ball"></i>
+                <span>TENNIS<span class="highlight">AI</span></span>
+            </div>
+            <nav>
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <p class="eyebrow">MATCH ANALYSIS DASHBOARD</p>
+            <h1>Performance Report</h1>
+            <p class="hero-subtitle">
+                AI-powered tactical insights, shot trends, and player performance summary
+            </p>
+        </section>
+
+        <section class="main-layout">
+            <div class="video-panel card">
+                <div class="section-title-row">
+                    <h2>Match Video</h2>
+                    <span class="section-tag">Processed Output</span>
+                </div>
+                <video controls playsinline>
+                    <source src="{{ video_url }}" type="video/mp4">
+                    Your browser doesn't support this video.
+                </video>
+            </div>
+
+            <div class="summary-panel">
+                <div class="card summary-card primary">
+                    <div class="summary-label">Total Shots</div>
+                    <div class="summary-value">{{ result.total_shots }}</div>
+                    <div class="summary-note">Detected rallies and shot events</div>
+                </div>
+
+                <div class="mini-summary-grid">
+                    <div class="card summary-card">
+                        <div class="summary-label">Player 1 Avg Shot Speed</div>
+                        <div class="summary-value small">{{ result.average_shot_speed.player_1 | round(1) }}</div>
+                        <div class="summary-unit">km/h</div>
+                    </div>
+
+                    <div class="card summary-card">
+                        <div class="summary-label">Player 2 Avg Shot Speed</div>
+                        <div class="summary-value small">{{ result.average_shot_speed.player_2 | round(1) }}</div>
+                        <div class="summary-unit">km/h</div>
+                    </div>
+
+                    <div class="card summary-card">
+                        <div class="summary-label">Player 1 Recovery</div>
+                        <div class="summary-value small">{{ (result.recovery_rate.player_1 * 100) | round(1) }}</div>
+                        <div class="summary-unit">%</div>
+                    </div>
+
+                    <div class="card summary-card">
+                        <div class="summary-label">Player 2 Recovery</div>
+                        <div class="summary-value small">{{ (result.recovery_rate.player_2 * 100) | round(1) }}</div>
+                        <div class="summary-unit">%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="insight-grid">
+            <div class="card metric-panel">
+                <div class="section-title-row">
+                    <h2>Match Overview</h2>
+                    <span class="section-tag">Key Metrics</span>
+                </div>
+                <div class="metric-list">
+                    <div class="metric-row">
+                        <span>Average Ball Speed</span>
+                        <strong>{{ result.ball_speed.average | round(1) }} km/h</strong>
+                    </div>
+                    <div class="metric-row">
+                        <span>Maximum Ball Speed</span>
+                        <strong>{{ result.ball_speed.max | round(1) }} km/h</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card ai-panel">
+                <div class="section-title-row">
+                    <h2>AI Tactical Insights</h2>
+                    <span class="section-tag">Coach Notes</span>
+                </div>
+                <div class="ai-list">
+                    {% for item in result.feedback %}
+                    <div class="ai-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ item }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Shot type summary -->
+        <section class="shot-summary">
+            <div class="section-title-row">
+                <h2>Shot Type Summary</h2>
+                <span class="section-tag">Pose-Based Detection</span>
+            </div>
+
+            <div class="shot-summary-grid">
+                <div class="card shot-card">
+                    <div class="summary-label">Serves</div>
+                    <div class="summary-value small">{{ result.shot_type_counts.serve_candidate }}</div>
+                </div>
+
+                <div class="card shot-card">
+                    <div class="summary-label">Forehands</div>
+                    <div class="summary-value small">{{ result.shot_type_counts.forehand_like }}</div>
+                </div>
+
+                <div class="card shot-card">
+                    <div class="summary-label">Backhands</div>
+                    <div class="summary-value small">{{ result.shot_type_counts.backhand_like }}</div>
+                </div>
+
+                <div class="card shot-card">
+                    <div class="summary-label">Volleys</div>
+                    <div class="summary-value small">{{ result.shot_type_counts.volley_candidate }}</div>
+                </div>
+
+                <div class="card shot-card">
+                    <div class="summary-label">Smashes</div>
+                    <div class="summary-value small">{{ result.shot_type_counts.smash_candidate }}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="charts">
+            <div class="chart-box card">
+                <div class="section-title-row">
+                    <h3>Shot Placement Distribution</h3>
+                    <span class="section-tag">Spatial Trend</span>
+                </div>
+                <canvas id="placementChart"></canvas>
+            </div>
+
+            <div class="chart-box card">
+                <div class="section-title-row">
+                    <h3>Shot Direction Distribution</h3>
+                    <span class="section-tag">Directional Trend</span>
+                </div>
+                <canvas id="directionChart"></canvas>
+            </div>
+
+            <!-- NEW: shot type chart -->
+            <div class="chart-box card">
+                <div class="section-title-row">
+                    <h3>Shot Type Distribution</h3>
+                    <span class="section-tag">Classification Trend</span>
+                </div>
+                <canvas id="shotTypeChart"></canvas>
+            </div>
+        </section>
+
+        <!-- NEW: detailed shot events -->
+        <section class="card shot-events-panel">
+            <div class="section-title-row">
+                <h2>Detected Shot Events</h2>
+                <span class="section-tag">Frame-by-Frame</span>
+            </div>
+
+            {% if result.shot_events %}
+            <div class="table-wrapper">
+                <table class="shot-events-table">
+                    <thead>
+                        <tr>
+                            <th>Frame</th>
+                            <th>Player</th>
+                            <th>Shot Type</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in result.shot_events %}
+                        <tr>
+                            <td>{{ event.frame }}</td>
+                            <td>Player {{ event.player_id }}</td>
+                            <td>{{ event.label }}</td>
+                            <td>{{ "%.2f"|format(event.confidence) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-note">No shot events were detected.</p>
+            {% endif %}
+        </section>
+
+        <footer class="footer">
+            <p>AI Tennis Performance Analysis Platform</p>
+        </footer>
+    </div>
+
+    <script>
+        window.shotDistribution = {{ result.shot_distribution | tojson }};
+        window.directionDistribution = {{ result.direction_distribution | tojson }};
+        window.shotTypeCounts = {{ result.shot_type_counts | tojson }};
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>
+</body>
+</html>
